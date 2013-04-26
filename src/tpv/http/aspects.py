@@ -42,7 +42,8 @@ class dispatch_http_method(Aspect):
         except AttributeError:
             raise exc.NotImplemented
 
-        return json.dumps(method(**kw))
+        response = method(**kw)
+        return json.dumps(response)
 
 
 class view(Aspect):
