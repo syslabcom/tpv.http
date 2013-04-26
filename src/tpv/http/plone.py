@@ -72,7 +72,8 @@ class Wrapper(object):
 
         url = '/' + '/'.join(reversed(zrequest.path))
         query = zrequest.QUERY_STRING
-        trailing_slash = zrequest.ACTUAL_URL.endswith('/')
+        if zrequest.ACTUAL_URL.endswith('/'):
+            url = url + '/'
 
         if method in ('PUT', 'POST'):
             try:
