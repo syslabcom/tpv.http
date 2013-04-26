@@ -8,6 +8,8 @@ import plone.api
 
 from ZPublisher.HTTPResponse import status_reasons
 
+from tpv.ordereddict import OrderedDict
+
 from . import exceptions as exc
 from ._request import Request
 
@@ -76,7 +78,7 @@ class Wrapper(object):
             url = url + '/'
 
         query_string = zrequest.QUERY_STRING
-        query_list = urlparse.parse_qsl(query, keep_blank_values=True)
+        query_list = urlparse.parse_qsl(query_string, keep_blank_values=True)
         query = OrderedDict()
         for k, v in query_list:
             query.setdefault(k, []).append(v)
