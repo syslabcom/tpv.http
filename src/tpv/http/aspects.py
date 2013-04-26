@@ -34,6 +34,9 @@ class dispatch_http_method(Aspect):
         if method not in ('GET', 'POST', 'PUT', 'DELETE'):
             raise exc.MethodNotAllowed
 
+        if kw['url'].endswith('/') and method != 'GET':
+            raise exc.BadRequest
+
         try:
             method = getattr(self, method)
         except AttributeError:
