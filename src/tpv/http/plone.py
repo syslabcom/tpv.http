@@ -71,9 +71,14 @@ class Wrapper(object):
             method = zrequest.getHeader('X-Zope-Real-Method') or 'POST'
 
         url = '/' + '/'.join(reversed(zrequest.path))
-        query = zrequest.QUERY_STRING
         if zrequest.ACTUAL_URL.endswith('/'):
             url = url + '/'
+
+        query_string = zrequest.QUERY_STRING
+        query_list = urlparse.parse_qsl(query, keep_blank_values=True)
+        query = OrderedDict()
+        for k, v in query_list:
+            query.setdefault(k, []).append(v)
 
         if method in ('PUT', 'POST'):
             try:
@@ -88,7 +93,7 @@ class Wrapper(object):
         else:
             data = None
 
-        return Request(method=method, url=url, data=data)
+        return Request(method=method, url=url, data=data, query=query)
 
     def __call__(self):
         """Called from traverser.__call__
