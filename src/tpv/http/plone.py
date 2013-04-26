@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import json
 import traceback
+import urlparse
 
 import plone.api
 
