@@ -97,7 +97,10 @@ class Wrapper(object):
         else:
             data = None
 
-        return Request(method=method, url=url, data=data, query=query)
+        remoteip = zrequest.HTTP_X_REAL_IP
+
+        return Request(method=method, url=url, data=data, query=query,
+                       remoteip=remoteip)
 
     def __call__(self):
         """Called from traverser.__call__
