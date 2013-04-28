@@ -1,8 +1,9 @@
-from .. import aspects
+from __future__ import absolute_import
 
+import tpv.aspects
 
 # XXX: add required init kws
 
-@aspects.getattr_children
+@tpv.aspects.getattr_children
 class Request(dict):
     pass
