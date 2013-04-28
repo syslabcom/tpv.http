@@ -63,9 +63,9 @@ class map_http_methods_to_model(Aspect):
     def GET(self, url, **kw):
         node = self.traverse(url)
         if url.endswith('/'):
-            return [OrderedDict(view(x).iteritems()) for x in node.values()
+            return [OrderedDict(view(x).items()) for x in node.values()
                     if hasattr(x, 'keys')]
-        return OrderedDict(view(node).iteritems())
+        return OrderedDict(view(node).items())
 
     def POST(self, url, data, **kw):
         """Add a new child, must not exist already
