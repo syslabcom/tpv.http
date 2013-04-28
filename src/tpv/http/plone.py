@@ -92,7 +92,8 @@ class Wrapper(object):
                                   zrequest.CONTENT_TYPE
                 return
             else:
-                data = handler(zrequest)
+                tuple_list_data_or_dict = handler(zrequest)
+                data = OrderedDict(tuple_list_data_or_dict)
         else:
             data = None
 
