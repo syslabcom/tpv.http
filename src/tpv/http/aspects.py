@@ -98,7 +98,7 @@ class map_http_methods_to_model(Aspect):
         return self._render(node)
 
     def _render(self, node):
-        return OrderedDict(hasattr(v, 'keys') and dict() or (k, v)
+        return OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
                            for k, v in node.items())
 
     def POST(self, url, data, **kw):
