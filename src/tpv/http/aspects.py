@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import json
 import logging
+import types
 
 from metachao import aspect
 from metachao.aspect import Aspect
@@ -43,6 +44,10 @@ class dispatch_http_method(Aspect):
             raise exc.NotImplemented
 
         response = method(**kw)
+        if type(response) == types.GeneratorType:
+            response = [json.dumps(x) for x in response]
+            response = '[' + ', '.join(response) + ']'
+            return response
         return json.dumps(response)
 
 
