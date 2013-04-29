@@ -89,17 +89,21 @@ class map_http_methods_to_model(Aspect):
     model = aspect.aspectkw(model=None)
 
     def GET(self, url, **kw):
-        node = self.traverse(url)
+        id, node = self.traverse(url)
+
         if url.endswith('/'):
             return (
-                self._render(x) for x in node.values()
-                if hasattr(x, 'keys')
+                self._render(id, node) for id, node in node.items()
+                if hasattr(node, 'keys')
             )
-        return self._render(node)
+        else:
+            return self._render(id, node)
 
-    def _render(self, node):
-        return OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
-                           for k, v in node.items())
+    def _render(self, id, node):
+        response = OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
+                               for k, v in node.items())
+        response['id'] = id
+        return response
 
     def POST(self, url, data, **kw):
         """Add a new child, must not exist already
@@ -123,8 +127,9 @@ class map_http_methods_to_model(Aspect):
         node = self.model
         path = filter(None, url.split('/'))
         while path:
+            id = path.pop(0)
             try:
-                node = node[path.pop(0)]
+                node = node[id]
             except KeyError:
                 raise exc.NotFound
-        return node
+        return id, node
