@@ -126,6 +126,7 @@ class map_http_methods_to_model(Aspect):
     def traverse(self, url):
         node = self.model
         path = filter(None, url.split('/'))
+        id = None
         while path:
             id = path.pop(0)
             try:
