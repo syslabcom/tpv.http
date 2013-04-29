@@ -93,8 +93,8 @@ class map_http_methods_to_model(Aspect):
 
         if url.endswith('/'):
             return (
-                self._render(id, node) for id, node in node.items()
-                if hasattr(node, 'keys')
+                self._render(k, v) for k, v in node.items()
+                if hasattr(v, 'keys')
             )
         else:
             return self._render(id, node)
