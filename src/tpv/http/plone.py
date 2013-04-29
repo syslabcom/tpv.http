@@ -20,14 +20,6 @@ DATA_HANDLER = {
 }
 
 
-SUCCESS_STATUS = dict(
-    GET=200,
-    POST=201,
-    PUT=204,
-    DELETE=204,
-)
-
-
 import logging
 log = logging.getLogger('tpv.http.plone')
 
@@ -120,14 +112,14 @@ class Wrapper(object):
             self.request['authenticated_user_id'] = authenticated_user_id
 
             try:
-                response_body = self.app(**self.request)
-                status = SUCCESS_STATUS[self.request.method]
+                status, response_body = self.app(**self.request)
             except (AttributeError, IndexError, KeyError, NameError,
                     TypeError), e:
                 log.error("%s\n%s" % (str(e), traceback.format_exc()))
                 self.error = 500
-            except exc.ResponseCode, e:
-                self.error = e.code
+            else:
+                if status >= 400:
+                    self.error = status
 
         if self.error:
             status = self.error

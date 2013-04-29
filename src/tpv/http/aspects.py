@@ -30,8 +30,26 @@ class block_access_to_root(Aspect):
         return _next(**kw)
 
 
+SUCCESS_STATUS = dict(
+    GET=200,
+    POST=201,
+    PUT=204,
+    DELETE=204,
+)
+
+
 class dispatch_http_method(Aspect):
     def __call__(self, method, **kw):
+        try:
+            response = self._call(method=method, **kw)
+        except exc.ResponseCode, e:
+            response = ""
+            status = e.code
+        else:
+            status = SUCCESS_STATUS[method]
+        return status, response
+
+    def _call(self, method, **kw):
         if method not in ('GET', 'POST', 'PUT', 'DELETE'):
             raise exc.MethodNotAllowed
 
@@ -47,8 +65,10 @@ class dispatch_http_method(Aspect):
         if type(response) == types.GeneratorType:
             response = [json.dumps(x) for x in response]
             response = '[' + ', '.join(response) + ']'
-            return response
-        return json.dumps(response)
+        else:
+            response = json.dumps(response)
+
+        return response
 
 
 # class view(Aspect):
