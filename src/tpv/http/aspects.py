@@ -51,13 +51,16 @@ class dispatch_http_method(Aspect):
         return json.dumps(response)
 
 
-class view(Aspect):
-    @aspect.plumb
-    def iteritems(_next, self):
-        for k, v in _next():
-            if hasattr(v, 'keys'):
-                v = dict()
-            yield (k, v)
+# class view(Aspect):
+#     @aspect.plumb
+#     def iteritems(_next, self):
+#         for k, v in _next():
+#             if hasattr(v, 'keys'):
+#                 v = dict()
+#             yield (k, v)
+
+#     def items(self):
+#         return self.iteritems()
 
 
 class map_http_methods_to_model(Aspect):
@@ -68,9 +71,15 @@ class map_http_methods_to_model(Aspect):
     def GET(self, url, **kw):
         node = self.traverse(url)
         if url.endswith('/'):
-            return [OrderedDict(view(x).items()) for x in node.values()
-                    if hasattr(x, 'keys')]
-        return OrderedDict(view(node).items())
+            return (
+                self._render(x) for x in node.values()
+                if hasattr(x, 'keys')
+            )
+        return self._render(node)
+
+    def _render(self, node):
+        return OrderedDict(hasattr(v, 'keys') and dict() or (k, v)
+                           for k, v in node.items())
 
     def POST(self, url, data, **kw):
         """Add a new child, must not exist already
