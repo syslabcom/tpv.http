@@ -108,13 +108,13 @@ class map_http_methods_to_model(Aspect):
     def POST(self, url, data, **kw):
         """Add a new child, must not exist already
         """
-        node = self.traverse(url)
+        id, node = self.traverse(url)
         return node.add(data)
 
     def PUT(self, url, data, **kw):
         """Add/overwrite children - I guess
         """
-        node = self.traverse(url)
+        id, node = self.traverse(url)
         node.update(data)
 
     def DELETE(self, url, **kw):
