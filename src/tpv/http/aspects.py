@@ -90,18 +90,20 @@ class map_http_methods_to_model(Aspect):
 
     def GET(self, url, **kw):
         id, node = self.traverse(url)
+        attrlist = kw['query'].get('attrlist')
 
         if url.endswith('/'):
             return (
-                self._render(k, v) for k, v in node.items()
+                self._render(k, v, attrlist) for k, v in node.items()
                 if hasattr(v, 'keys')
             )
         else:
             return self._render(id, node)
 
-    def _render(self, id, node):
+    def _render(self, id, node, attrlist=None):
         response = OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
-                               for k, v in node.items())
+                               for k, v in node.items()
+                               if k in attrlist or attrlist is None)
         response['id'] = id
         return response
 
