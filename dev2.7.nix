@@ -1,17 +1,22 @@
 { }:
 
+with import <nixpkgs> {};
+
 let
-  base = import ./base.nix { };
+  python = python27;
+  pythonPackages = python27Packages;
+  base = import ./base.nix {
+    inherit python pythonPackages;
+    pythonDocs = pythonDocs.html.python27;
+  };
 
 in
-
-with import <nixpkgs> {};
 
 buildEnv {
   name = "dev-env";
   ignoreCollisions = true;
   paths =
-    [ python27Packages.pyramid
-      python27Packages.webtest
-    ] ++ base.paths27;
+    [ pythonPackages.pyramid
+      pythonPackages.webtest
+    ] ++ base.paths;
 }
