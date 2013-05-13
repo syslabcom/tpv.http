@@ -43,7 +43,7 @@ class dispatch_http_method(Aspect):
         try:
             response = self._call(method=method, **kw)
         except exc.ResponseCode, e:
-            response = ""
+            response = json.dumps(getattr(e, 'body', None))
             status = e.code
         else:
             status = SUCCESS_STATUS[method]
