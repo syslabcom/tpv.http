@@ -28,6 +28,7 @@ in
            ] ++
            (optionals isPy26
             [
+              ordereddict
               unittest2
             ]) ++
            (optionals isPy27
