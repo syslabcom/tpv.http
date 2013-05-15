@@ -128,6 +128,15 @@ class dispatch_http_method(Aspect):
 class filter_search(Aspect):
     criteria = aspect.aspectkw(criteria=None)
 
+    def __iter__(self):
+        return self.search(attrlist=[''])
+
+    def itervalues(self):
+        return self.search()
+
+    def iteritems(self):
+        return ((node.dn, node) for node in self.itervalues())
+
     @aspect.plumb
     def search(_next, self, criteria=None, **kw):
         return _next(criteria=self.criteria, **kw)
@@ -145,9 +154,10 @@ class map_http_methods_to_model(Aspect):
             attr = kw['query'].get('attr')
             criteria = kw['query'].get('criteria')
             if criteria:
+                criteria = [json.loads(x) for x in criteria]
                 node = filter_search(node, criteria=criteria)
             return (self._render(k, v, attr)
-                    for k, v in node.items()
+                    for k, v in node.iteritems()
                     if hasattr(v, 'keys'))
         else:
             return self._render(id, node)
