@@ -123,8 +123,6 @@ class Wrapper(object):
 
         if self.error:
             status = self.error
-            response_body = '"%s: %s"' % (self.error,
-                                          status_reasons[self.error])
 
         self.zresponse.setStatus(status, lock=True)
         self.zresponse.setHeader('Content-Type', 'application/json')
