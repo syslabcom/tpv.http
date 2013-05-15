@@ -156,7 +156,7 @@ class map_http_methods_to_model(Aspect):
             if criteria:
                 criteria = [json.loads(x) for x in criteria]
                 node = filter_search(node, criteria=criteria)
-            return (self._render(k, v, attr)
+            return (self._render(v._id, v, attr)
                     for k, v in node.iteritems()
                     if hasattr(v, 'keys'))
         else:
