@@ -15,6 +15,46 @@ from . import exceptions as exc
 log = logging.getLogger('tpv.http')
 
 
+class ipdb__call__(Aspect):
+    @aspect.plumb
+    def __call__(_next, self, **kw):
+        import ipdb
+        ipdb.set_trace()
+        return _next(**kw)
+
+
+class ipdb_GET(Aspect):
+    @aspect.plumb
+    def GET(_next, self, **kw):
+        import ipdb
+        ipdb.set_trace()
+        return _next(**kw)
+
+
+class ipdb_POST(Aspect):
+    @aspect.plumb
+    def POST(_next, self, **kw):
+        import ipdb
+        ipdb.set_trace()
+        return _next(**kw)
+
+
+class ipdb_PUT(Aspect):
+    @aspect.plumb
+    def PUT(_next, self, **kw):
+        import ipdb
+        ipdb.set_trace()
+        return _next(**kw)
+
+
+class ipdb_DELETE(Aspect):
+    @aspect.plumb
+    def DELETE(_next, self, **kw):
+        import ipdb
+        ipdb.set_trace()
+        return _next(**kw)
+
+
 class log_call(Aspect):
     @aspect.plumb
     def __call__(_next, self, **kw):
