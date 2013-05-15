@@ -18,7 +18,9 @@ log = logging.getLogger('tpv.http')
 class log_call(Aspect):
     @aspect.plumb
     def __call__(_next, self, **kw):
-        log.info('CALL: %r', kw)
+        log.info('%(method)s %(url)s' % kw +
+                 ' %r', dict((k, v) for k, v in kw.items()
+                             if k not in ('method', 'url')))
         return _next(**kw)
 
 
