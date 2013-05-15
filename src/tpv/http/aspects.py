@@ -125,6 +125,14 @@ class dispatch_http_method(Aspect):
 #         return self.iteritems()
 
 
+class filter_search(Aspect):
+    criteria = aspect.aspectkw(criteria=None)
+
+    @aspect.plumb
+    def search(_next, self, criteria=None, **kw):
+        return _next(criteria=self.criteria, **kw)
+
+
 class map_http_methods_to_model(Aspect):
     """map GET/POST/PUT/DELETE to node methods
     """
@@ -132,13 +140,15 @@ class map_http_methods_to_model(Aspect):
 
     def GET(self, url, **kw):
         id, node = self.traverse(url)
-        attr = kw['query'].get('attr')
 
         if url.endswith('/'):
-            return (
-                self._render(k, v, attr) for k, v in node.items()
-                if hasattr(v, 'keys')
-            )
+            attr = kw['query'].get('attr')
+            criteria = kw['query'].get('criteria')
+            if criteria:
+                node = filter_search(node, criteria=criteria)
+            return (self._render(k, v, attr)
+                    for k, v in node.items()
+                    if hasattr(v, 'keys'))
         else:
             return self._render(id, node)
 
