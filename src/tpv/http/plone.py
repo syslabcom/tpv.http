@@ -77,7 +77,8 @@ class Wrapper(object):
 
         if method in ('PUT', 'POST'):
             try:
-                handler = DATA_HANDLER[zrequest.CONTENT_TYPE]
+                content_type = zrequest.CONTENT_TYPE.split(';')[0]
+                handler = DATA_HANDLER[content_type]
             except (KeyError, ValueError), e:
                 log.error("%s\n%s" % (str(e), traceback.format_exc()))
                 self.error = 400
