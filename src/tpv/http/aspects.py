@@ -169,7 +169,10 @@ class map_http_methods_to_model(Aspect):
         """Add/overwrite children - I guess
         """
         id, node = self.traverse(url)
-        node.update(data)
+        try:
+            node.update(data)
+        except ValueError, e:
+            raise exc.BadRequest(unicode(e))
 
     def DELETE(self, url, **kw):
         # node = self.traverse(url)
