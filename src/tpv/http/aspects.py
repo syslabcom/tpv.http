@@ -151,23 +151,13 @@ class map_http_methods_to_model(Aspect):
         id, node = self.traverse(url)
 
         if url.endswith('/'):
-            attr = kw['query'].get('attr')
             criteria = kw['query'].get('criteria')
             if criteria:
                 criteria = [json.loads(x) for x in criteria]
                 node = filter_search(node, criteria=criteria)
-            return (self._render(v._id, v, attr)
-                    for k, v in node.iteritems()
-                    if hasattr(v, 'keys'))
-        else:
-            return self._render(id, node)
 
-    def _render(self, id, node, attr=None):
-        response = OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
-                               for k, v in node.items()
-                               if attr is None or k in attr)
-        response['id'] = id
-        return response
+            return node.iteritems()
+        return node
 
     def POST(self, url, data, **kw):
         """Add a new child, must not exist already
@@ -198,3 +188,24 @@ class map_http_methods_to_model(Aspect):
             except KeyError:
                 raise exc.NotFound
         return id, node
+
+
+class render(Aspect):
+    @aspect.plumb
+    def GET(_next, self, **kw):
+        attr = kw['query'].get('attr')
+
+        if kw['url'].endswith('/'):
+            return (self._render(v._id, v, attr)
+                    for k, v in _next(**kw)
+                    if hasattr(v, 'keys'))
+        else:
+            node = _next(**kw)
+            return self._render(node._id, node, attr)
+
+    def _render(self, id, node, attr=None):
+        response = OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
+                               for k, v in node.items()
+                               if attr is None or k in attr)
+        response['id'] = id
+        return response
