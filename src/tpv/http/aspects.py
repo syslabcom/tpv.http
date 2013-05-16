@@ -201,7 +201,11 @@ class render(Aspect):
                     if hasattr(v, 'keys'))
         else:
             node = _next(**kw)
-            return self._render(node._id, node, attr)
+            try:
+                id = node._id
+            except AttributeError:
+                id = kw['url'].split('/')[-1]
+            return self._render(id, node, attr)
 
     def _render(self, id, node, attr=None):
         response = OrderedDict(hasattr(v, 'keys') and (k, dict()) or (k, v)
