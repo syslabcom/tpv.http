@@ -84,7 +84,11 @@ class Wrapper(object):
                                   zrequest.CONTENT_TYPE
                 return
             else:
-                tuple_list_data_or_dict = handler(zrequest)
+                try:
+                    tuple_list_data_or_dict = handler(zrequest)
+                except ValueError, e:
+                    self.error = 400
+                    self.error_body = unicode(e)
                 data = OrderedDict(tuple_list_data_or_dict)
         else:
             data = None
