@@ -148,6 +148,7 @@ class criteria_loads(Aspect):
         criteria = kw['query'].get('criteria')
         if criteria:
             kw['query']['criteria'] = [json.loads(x) for x in criteria]
+        return _next(**kw)
 
 
 class map_http_methods_to_model(Aspect):
