@@ -99,6 +99,7 @@ class Wrapper(object):
 
         Call tpv.http application and compile response
         """
+        response_body = ""
         if not self.error:
             if plone.api.user.is_anonymous():
                 authenticated_user_id = None
@@ -115,7 +116,6 @@ class Wrapper(object):
                 status, response_body = self.app(**self.request)
             except (AttributeError, IndexError, KeyError, NameError,
                     TypeError), e:
-                response_body = None
                 log.error("%s\n%s" % (str(e), traceback.format_exc()))
                 self.error = 500
             else:
