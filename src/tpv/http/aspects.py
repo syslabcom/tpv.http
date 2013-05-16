@@ -142,6 +142,14 @@ class filter_search(Aspect):
         return _next(criteria=self.criteria, **kw)
 
 
+class criteria_loads(Aspect):
+    @aspect.plumb
+    def GET(_next, self, **kw):
+        criteria = kw['query'].get('criteria')
+        if criteria:
+            kw['query']['criteria'] = [json.loads(x) for x in criteria]
+
+
 class map_http_methods_to_model(Aspect):
     """map GET/POST/PUT/DELETE to node methods
     """
@@ -153,7 +161,6 @@ class map_http_methods_to_model(Aspect):
         if url.endswith('/'):
             criteria = kw['query'].get('criteria')
             if criteria:
-                criteria = [json.loads(x) for x in criteria]
                 node = filter_search(node, criteria=criteria)
 
             return node.iteritems()
