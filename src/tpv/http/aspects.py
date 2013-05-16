@@ -185,7 +185,10 @@ class map_http_methods_to_model(Aspect):
     def DELETE(self, url, **kw):
         url, id = url.rsplit('/', 1)
         _, node = self.traverse(url)
-        del node[id]
+        try:
+            del node[id]
+        except ValueError, e:
+            raise exc.BadRequest(unicode(e))
 
     def traverse(self, url):
         node = self.model
