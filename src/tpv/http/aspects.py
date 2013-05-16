@@ -175,10 +175,9 @@ class map_http_methods_to_model(Aspect):
             raise exc.BadRequest(unicode(e))
 
     def DELETE(self, url, **kw):
-        # node = self.traverse(url)
-        # del node.parent[node.id]
-        # XXX: or are we sending the delete to the parent and a list of ids?
-        raise exc.NotImplemented
+        url, id = url.rsplit('/', 1)
+        node = self.traverse(url)
+        del node[id]
 
     def traverse(self, url):
         node = self.model
