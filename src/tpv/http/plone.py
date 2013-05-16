@@ -79,6 +79,7 @@ class Wrapper(object):
             try:
                 handler = DATA_HANDLER[zrequest.CONTENT_TYPE]
             except (KeyError, ValueError), e:
+                log.error("%s\n%s" % (str(e), traceback.format_exc()))
                 self.error = 400
                 self.error_body = 'Unknown content type: %s' % \
                                   zrequest.CONTENT_TYPE
@@ -87,6 +88,7 @@ class Wrapper(object):
                 try:
                     tuple_list_data_or_dict = handler(zrequest)
                 except ValueError, e:
+                    log.error("%s\n%s" % (str(e), traceback.format_exc()))
                     self.error = 400
                     self.error_body = unicode(e)
                 data = OrderedDict(tuple_list_data_or_dict)
