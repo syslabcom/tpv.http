@@ -92,7 +92,13 @@ class Wrapper(object):
                     log.error("%s\n%s" % (str(e), traceback.format_exc()))
                     self.error = 400
                     self.error_body = unicode(e)
-                data = OrderedDict(tuple_list_data_or_dict)
+                if not isinstance(data, basestring):
+                    try:
+                        data = OrderedDict(tuple_list_data_or_dict)
+                    except ValueError, e:
+                        log.error("%s\n%s" % (str(e), traceback.format_exc()))
+                        self.error = 400
+                        self.error_body = unicode(e)
         else:
             data = None
 
