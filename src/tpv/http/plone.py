@@ -87,14 +87,14 @@ class Wrapper(object):
                 return
             else:
                 try:
-                    tuple_list_data_or_dict = handler(zrequest)
+                    data = handler(zrequest)
                 except ValueError, e:
                     log.error("%s\n%s" % (str(e), traceback.format_exc()))
                     self.error = 400
                     self.error_body = unicode(e)
                 if not isinstance(data, basestring):
                     try:
-                        data = OrderedDict(tuple_list_data_or_dict)
+                        data = OrderedDict(data)
                     except ValueError, e:
                         log.error("%s\n%s" % (str(e), traceback.format_exc()))
                         self.error = 400
