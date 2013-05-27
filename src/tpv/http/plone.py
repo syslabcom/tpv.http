@@ -75,7 +75,9 @@ class Wrapper(object):
         for k, v in query_list:
             query.setdefault(k, []).append(v)
 
-        url_with_query = url + '?' + query_string
+        url_with_query = url
+        if query_string:
+            url_with_query += '?' + query_string
 
         if method in ('PUT', 'POST'):
             try:
