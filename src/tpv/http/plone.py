@@ -75,6 +75,8 @@ class Wrapper(object):
         for k, v in query_list:
             query.setdefault(k, []).append(v)
 
+        url_with_query = url + '?' + query_string
+
         if method in ('PUT', 'POST'):
             try:
                 content_type = zrequest.CONTENT_TYPE.split(';')[0]
@@ -105,7 +107,7 @@ class Wrapper(object):
         remoteip = zrequest.HTTP_X_REAL_IP
 
         return Request(method=method, url=url, data=data, query=query,
-                       remoteip=remoteip)
+                       remoteip=remoteip, url_with_query=url_with_query)
 
     def __call__(self):
         """Called from traverser.__call__
