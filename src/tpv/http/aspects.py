@@ -58,9 +58,9 @@ class ipdb_DELETE(Aspect):
 class log_call(Aspect):
     @aspect.plumb
     def __call__(_next, self, **kw):
-        log.info('%(method)s %(url)s' % kw +
+        log.info('%(method)s %(url_with_query)s' % kw +
                  ' %r', dict((k, v) for k, v in kw.items()
-                             if k not in ('method', 'url')))
+                             if k not in ('method', 'url_with_query')))
         return _next(**kw)
 
 
