@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.6.dev0'
+version = '0.6'
 shortdesc = 'Restfully access the vortex via http.'
 
 #longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
