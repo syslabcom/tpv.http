@@ -180,7 +180,7 @@ class map_http_methods_to_model(Aspect):
         try:
             node.update(data)
         except ValueError, e:
-            raise exc.BadRequest(unicode(e))
+            raise exc.BadRequest(e.args[0])
 
     def DELETE(self, url, **kw):
         url, id = url.rsplit('/', 1)
