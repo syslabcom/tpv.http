@@ -72,14 +72,6 @@ class block_access_to_root(Aspect):
         return _next(**kw)
 
 
-SUCCESS_STATUS = dict(
-    GET=200,
-    POST=201,
-    PUT=204,
-    DELETE=204,
-)
-
-
 class dispatch_http_method(Aspect):
     def __call__(self, method, **kw):
         try:
@@ -88,7 +80,24 @@ class dispatch_http_method(Aspect):
             response = json.dumps(getattr(e, 'body', None))
             status = e.code
         else:
-            status = SUCCESS_STATUS[method]
+            if method == 'POST':
+                status = 201
+            elif response:
+                status = 200
+            else:
+                status = 204
+
+            try:
+                if isinstance(response, types.GeneratorType):
+                    response = [json.dumps(x) for x in response]
+                    response = '[' + ', '.join(response) + ']'
+                else:
+                    response = json.dumps(response)
+            except Exception, e:
+                log.error('Error encoding json response:', e)
+                status = 500
+                response = ""
+
         return status, response
 
     def _call(self, method, **kw):
@@ -104,12 +113,6 @@ class dispatch_http_method(Aspect):
             raise exc.NotImplemented
 
         response = method(**kw)
-        if type(response) == types.GeneratorType:
-            response = [json.dumps(x) for x in response]
-            response = '[' + ', '.join(response) + ']'
-        else:
-            response = json.dumps(response)
-
         return response
 
 

@@ -25,5 +25,9 @@ class MethodNotAllowed(ResponseCode):
     code = 405
 
 
+class InternalServerError(ResponseCode):
+    code = 500
+
+
 class NotImplemented(ResponseCode):
     code = 501
