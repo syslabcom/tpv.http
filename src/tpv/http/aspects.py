@@ -130,6 +130,7 @@ class dispatch_http_method(Aspect):
 
 class filter_search(Aspect):
     criteria = aspect.aspectkw(criteria=None)
+    base_criteria = aspect.aspectkw(base_criteria=None)
 
     def __iter__(self):
         return self.search(attrlist=[''])
@@ -141,8 +142,9 @@ class filter_search(Aspect):
         return ((node.dn, node) for node in self.itervalues())
 
     @aspect.plumb
-    def search(_next, self, criteria=None, **kw):
-        return _next(criteria=self.criteria, **kw)
+    def search(_next, self, **kw):
+        return _next(criteria=self.criteria,
+                     base_criteria=self.base_criteria, **kw)
 
 
 class criteria_loads(Aspect):
@@ -164,8 +166,10 @@ class map_http_methods_to_model(Aspect):
 
         if url.endswith('/'):
             criteria = kw['query'].get('criteria')
-            if criteria:
-                node = filter_search(node, criteria=criteria)
+            base_criteria = kw['query'].get('base_criteria')
+            if criteria or base_criteria:
+                node = filter_search(node, criteria=criteria,
+                                     base_criteria=base_criteria)
 
             return node.iteritems()
         return node
