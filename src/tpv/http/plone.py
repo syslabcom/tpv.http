@@ -131,8 +131,7 @@ class Wrapper(object):
 
             try:
                 status, response_body = self.app(**self.request)
-            except (AttributeError, IndexError, KeyError, NameError,
-                    TypeError), e:
+            except Exception, e:
                 log.error("%s\n%s" % (str(e), traceback.format_exc()))
                 self.error = 500
             else:
