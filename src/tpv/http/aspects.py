@@ -20,7 +20,9 @@ class ipdb__call__(Aspect):
     def __call__(_next, self, **kw):
         import ipdb
         ipdb.set_trace()
-        return _next(**kw)
+        response = _next(**kw)
+        ipdb.set_trace()
+        return response
 
 
 class ipdb_GET(Aspect):
@@ -28,7 +30,9 @@ class ipdb_GET(Aspect):
     def GET(_next, self, **kw):
         import ipdb
         ipdb.set_trace()
-        return _next(**kw)
+        response = _next(**kw)
+        ipdb.set_trace()
+        return response
 
 
 class ipdb_POST(Aspect):
@@ -36,7 +40,9 @@ class ipdb_POST(Aspect):
     def POST(_next, self, **kw):
         import ipdb
         ipdb.set_trace()
-        return _next(**kw)
+        response = _next(**kw)
+        ipdb.set_trace()
+        return response
 
 
 class ipdb_PUT(Aspect):
@@ -44,7 +50,9 @@ class ipdb_PUT(Aspect):
     def PUT(_next, self, **kw):
         import ipdb
         ipdb.set_trace()
-        return _next(**kw)
+        response = _next(**kw)
+        ipdb.set_trace()
+        return response
 
 
 class ipdb_DELETE(Aspect):
@@ -52,7 +60,18 @@ class ipdb_DELETE(Aspect):
     def DELETE(_next, self, **kw):
         import ipdb
         ipdb.set_trace()
-        return _next(**kw)
+        response = _next(**kw)
+        ipdb.set_trace()
+        return response
+
+
+ipdb_all = aspect.compose(
+    ipdb__call__,
+    ipdb_GET,
+    ipdb_POST,
+    ipdb_PUT,
+    ipdb_DELETE,
+)
 
 
 class log_call(Aspect):
