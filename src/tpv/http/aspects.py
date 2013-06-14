@@ -168,14 +168,10 @@ class filter_search(Aspect):
 
 class criteria_loads(Aspect):
     @aspect.plumb
-    def __call__(_next, self, **kw):
+    def GET(_next, self, **kw):
         criteria = kw['query'].get('criteria')
         if criteria:
-            if kw['method'] == 'GET':
-                kw['query']['criteria'] = [json.loads(x) for x in criteria]
-            else:
-                raise exc.BadRequest(
-                    "criteria not allowed with %s" % kw['method'])
+            kw['query']['criteria'] = [json.loads(x) for x in criteria]
         return _next(**kw)
 
 
