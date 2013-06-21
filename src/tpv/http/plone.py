@@ -143,4 +143,11 @@ class Wrapper(object):
 
         self.zresponse.setStatus(status, lock=True)
         self.zresponse.setHeader('Content-Type', 'application/json')
+
+        # make sure we are not getting cached (by IEx)
+        self.zresponse.setHeader('Cache-Control',
+                                 'no-cache, no-store, must-revalidate')
+        self.zresponse.setHeader('Pragma', 'no-cache')
+        self.zresponse.setHeader('Expires', '0')
+
         return response_body
