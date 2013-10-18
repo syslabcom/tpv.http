@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import json
 import logging
 import types
+import urllib
 
 from metachao import aspect
 from metachao.aspect import Aspect
@@ -77,7 +78,11 @@ ipdb_all = aspect.compose(
 class log_call(Aspect):
     @aspect.plumb
     def __call__(_next, self, **kw):
-        log.info('%(method)s %(url_with_query)s' % kw +
+        vars = {
+            'url_with_query': urllib.unquote(kw['url_with_query']),
+            'method': kw['method']
+        }
+        log.info('%(method)s %(url_with_query)s' % vars +
                  ' %r', dict((k, v) for k, v in kw.items()
                              if k not in ('method', 'url_with_query')))
         return _next(**kw)
