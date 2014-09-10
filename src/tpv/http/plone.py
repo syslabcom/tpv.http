@@ -5,6 +5,7 @@ import traceback
 import urlparse
 
 import plone.api
+from StringIO import StringIO
 
 from ZPublisher.HTTPResponse import status_reasons
 
@@ -108,8 +109,17 @@ class Wrapper(object):
 
         remoteip = zrequest.HTTP_X_REAL_IP
 
-        return Request(method=method, url=url, data=data, query=query,
-                       remoteip=remoteip, url_with_query=url_with_query)
+        return Request(
+                data=data,
+                environ={},
+                getURL=lambda: url,
+                method=method,
+                query=query,
+                remoteip=remoteip,
+                stdin=StringIO(),
+                url=url,
+                url_with_query=url_with_query
+        )
 
     def __call__(self):
         """Called from traverser.__call__
