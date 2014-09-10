@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.12 (unreleased)
+0.12 (2014-09-10)
 -----------------
 
 - Add extra fields to request (for compatibility with sentry.contrib.zope) - jcbrand
